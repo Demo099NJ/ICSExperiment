@@ -1,0 +1,142 @@
+The GNU project is a remarkable achievement.
+19873 -9335
+213 107 54 28 15 8 5
+43 i 66
+12 494 hnaDkmUT
+EDJCHNLI
+6 5 3 4 7 1 2
+47
+hahahahahahaha
+
+phase3: 
+bool phase3(int x1, char c, int x2) {
+	char res_char;
+	int res_int;
+	switch(x1) {
+		case 0x29: case 0x2a: case 0x2b: case 0x2c: case 0x2d: case 0x2e: case 0x2f:
+			res_char = 'i'; res_int = 0x42; break;
+		case 0x30: res_char = 'j'; res_int = 0x3ab; break;
+	}
+	if(c == res_char && x2 == res_int) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+int func4(int x) {
+	if(x <= 0) {
+		return 0xc;
+	}
+	if(x == 1) {
+		return 0x10;
+	}
+	return func4(x - 0x1) + func4(x - 0x2);
+}
+
+bool phase4(int x1, int x2) {
+	if(x1 <=  0xa) {
+		return false;
+	}
+	return (func4(x1) == x2);
+}
+
+bool phase5(char *str) {
+	if(strlen(str) != 0x8) {
+		return false;
+	}
+	char targ[] = { "kjonlcigafhebmdp" };
+	char expect[] = { "clhnadbf" };
+	char res[8];
+	int loc(0);
+	for(int i = 0; i < 8; ++i) {
+		loc = str[i] & 0xf;
+		res[i] = targ[loc];
+	}
+	return (strcmp(res, expect) == 0x0);
+}
+
+struct node {
+	int val;
+	int unknow;
+	node *next;
+};
+
+node *NODE = { 7, 8, 3, 4, 2, 0, 5 };
+
+bool phase6(int arr[], int len = 7) {
+	node *temp[7];
+	int i(0x0);
+	node *pn(NULL);
+	//the HEAD is initialed in advance
+	node *head = HEAD;
+	//check the array we input
+	//every number in it have to be different
+	for(i = 0x0; i < 0x7; ++i) {
+		if(arr[i] > 7)
+			return false;
+		for(int j = i + 1; j < 0x7; ++j) {
+			if(arr[i] == arr[j])
+				return false;
+		}
+	}
+	//search the node in special location 
+	for(i = 0x0; i < 0x7; ++i) {
+		pn = head;
+		for(j = 0x1; j < arr[i]; ++j) {
+			pn = pn->next;
+		}
+		temp[i] = pn;
+	}
+	//sort the list again in a special order
+	head = temp[0];
+	pn = head;
+	for(i = 0x1; i < 0x7; ++i) {
+		pn->next = temp[i];
+		pn = pn->next;
+	}
+	pn->next = NULL;
+	//it seems that we want the list to be in ascending order
+	pn = head;
+	for(i = 0x0; i < 0x6; ++i) {
+		if(pn->val > pn->next->val)
+			return false;
+		pn = pn->next;
+	}
+	return true;
+}
+
+struct leaf {
+	int val;
+	leaf *left;
+	leaf *right;
+};
+
+typedef leaf* tree;
+
+int func7(tree root, int tar) {
+	if(root == NULL)
+		return -1;
+	if(root->val < tar) {
+		return 2 * func7(root->left, tar);
+	}
+	else if(root->val == tar) {
+		return 0;
+	}
+	else {
+		return 2 * func7(root->right, tar) + 1;
+	}
+}
+
+//ROOT is initialed in advance
+bool phase7(int value) {
+	//ROOT
+	if(value < 0x0 || value > 0x3e9)
+		return false;
+	int temp = func7(ROOT, value);
+	if(temp == 5)
+		return true;
+	else
+		return false;
+}
